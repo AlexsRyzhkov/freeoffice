@@ -50,7 +50,7 @@ type ITextParagraph interface {
 	SetBold() ITextParagraph
 	// Делает текст курсивным
 	SetItalic() ITextParagraph
-	// Делает текст подчеркнутым
+	// Делает текст подчеркнутым "
 	SetUnderline() ITextParagraph
 	// Делает текст зачеркнутым
 	SetStrike() ITextParagraph
