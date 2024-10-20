@@ -2,8 +2,8 @@ package files
 
 import (
 	"encoding/xml"
-	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/entity"
-	fg "github.com/AlexsRyzhkov/freeoffice/internal/docx/document/fragments"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/entity"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/fragments"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"
@@ -57,9 +57,9 @@ const (
 )
 
 type IDocumentFile interface {
-	AddParagraph(string, *fg.TextProperty) fg.ITextParagraph
-	AddImage(string, *fg.ImageProperty) fg.IImageParagraph
-	AddTable(int, int) fg.ITable
+	AddParagraph(string, *fragments.TextProperty) fragments.ITextParagraph
+	AddImage(string, *fragments.ImageProperty) fragments.IImageParagraph
+	AddTable(int, int) fragments.ITable
 }
 
 type DocumentFile struct {
@@ -67,20 +67,20 @@ type DocumentFile struct {
 	ImagesData []*entity.Image `xml:"-"`
 
 	XMLName xml.Name `xml:"w:document"`
-	Body    *fg.FBody
+	Body    *fragments.FBody
 
 	*DocumentSchemas
 }
 
-func (d *DocumentFile) AddParagraph(text string, property *fg.TextProperty) fg.ITextParagraph {
-	textParagraph := fg.CreateFTextParagraph(text, property)
+func (d *DocumentFile) AddParagraph(text string, property *fragments.TextProperty) fragments.ITextParagraph {
+	textParagraph := fragments.CreateFTextParagraph(text, property)
 
 	d.Body.AddParagraph(textParagraph)
 
 	return textParagraph
 }
 
-func (d *DocumentFile) AddImage(url string, property *fg.ImageProperty) fg.IImageParagraph {
+func (d *DocumentFile) AddImage(url string, property *fragments.ImageProperty) fragments.IImageParagraph {
 	file, err := os.Open(url)
 	if err != nil {
 		panic(err)
@@ -96,7 +96,7 @@ func (d *DocumentFile) AddImage(url string, property *fg.ImageProperty) fg.IImag
 	cy := img.Height * entity.EmuPerPixel
 
 	rationHeightToWidth := float64(cy) / float64(cx)
-	maxWidth := (fg.DefaultPageWidth - fg.DefaultMarginLeft - fg.DefaultMarginRight) * entity.TwipsToEmu
+	maxWidth := (fragments.DefaultPageWidth - fragments.DefaultMarginLeft - fragments.DefaultMarginRight) * entity.TwipsToEmu
 
 	if cx > maxWidth {
 		cx = maxWidth
@@ -113,15 +113,15 @@ func (d *DocumentFile) AddImage(url string, property *fg.ImageProperty) fg.IImag
 
 	d.ImagesData = append(d.ImagesData, imageEntity)
 
-	imageParagraph := fg.CreateFImageParagraph(imageEntity, property)
+	imageParagraph := fragments.CreateFImageParagraph(imageEntity, property)
 
 	d.Body.AddParagraph(imageParagraph)
 
 	return imageParagraph
 }
 
-func (d *DocumentFile) AddTable(rows int, cols int) fg.ITable {
-	table := fg.CreateFTable(rows, cols)
+func (d *DocumentFile) AddTable(rows int, cols int) fragments.ITable {
+	table := fragments.CreateFTable(rows, cols)
 
 	d.Body.AddParagraph(table)
 
@@ -218,6 +218,6 @@ func CreateDocumentFile() *DocumentFile {
 	return &DocumentFile{
 		XMLSchema:       XMLSchema,
 		DocumentSchemas: newDocumentSchema(),
-		Body:            fg.CreateFBody(),
+		Body:            fragments.CreateFBody(),
 	}
 }

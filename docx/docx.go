@@ -3,30 +3,30 @@ package docx
 import (
 	"archive/zip"
 	"bytes"
-	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/files"
-	"github.com/AlexsRyzhkov/freeoffice/internal/docx/helper"
+	files2 "github.com/AlexsRyzhkov/freeoffice/docx/document/files"
+	"github.com/AlexsRyzhkov/freeoffice/docx/helper"
 	"io"
 	"os"
 	"path/filepath"
 )
 
 type Docx struct {
-	relations *files.RelationshipFile
-	document  *files.DocumentFile
+	relations *files2.RelationshipFile
+	document  *files2.DocumentFile
 }
 
 func New() *Docx {
 	return &Docx{
-		relations: files.CreateRelationshipsFile(),
-		document:  files.CreateDocumentFile(),
+		relations: files2.CreateRelationshipsFile(),
+		document:  files2.CreateDocumentFile(),
 	}
 }
 
-func (d *Docx) GetDocument() files.IDocumentFile {
+func (d *Docx) GetDocument() files2.IDocumentFile {
 	return d.document
 }
 
-func (d *Docx) GetRelations() files.IRelationFile {
+func (d *Docx) GetRelations() files2.IRelationFile {
 	return d.relations
 }
 
