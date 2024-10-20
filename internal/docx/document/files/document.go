@@ -2,8 +2,8 @@ package files
 
 import (
 	"encoding/xml"
-	"github.com/freeoffice/internal/docx/document/entity"
-	fg "github.com/freeoffice/internal/docx/document/fragments"
+	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/entity"
+	fg "github.com/AlexsRyzhkov/freeoffice/internal/docx/document/fragments"
 	"image"
 	_ "image/jpeg"
 	_ "image/png"

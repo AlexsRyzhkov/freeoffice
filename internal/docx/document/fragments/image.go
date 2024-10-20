@@ -2,7 +2,7 @@ package fragments
 
 import (
 	"encoding/xml"
-	"github.com/freeoffice/internal/docx/document/entity"
+	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/entity"
 	"math/rand/v2"
 	"strconv"
 )

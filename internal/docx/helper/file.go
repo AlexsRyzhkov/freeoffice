@@ -4,7 +4,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"encoding/xml"
-	"github.com/freeoffice/internal/docx/document/files"
+	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/files"
 	"io"
 	"os"
 )

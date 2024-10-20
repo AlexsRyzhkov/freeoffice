@@ -3,8 +3,8 @@ package docx
 import (
 	"archive/zip"
 	"bytes"
-	"github.com/freeoffice/internal/docx/document/files"
-	"github.com/freeoffice/internal/docx/helper"
+	"github.com/AlexsRyzhkov/freeoffice/internal/docx/document/files"
+	"github.com/AlexsRyzhkov/freeoffice/internal/docx/helper"
 	"io"
 	"os"
 	"path/filepath"
