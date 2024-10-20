@@ -57,13 +57,13 @@ func (d *Docx) addToZip(zipDocx io.Writer) {
 	defer zipDocxWriter.Close()
 
 	copyFiles := [][]string{
-		[]string{"internal/docx/default-struct/_rels/.rels", "_rels/.rels"},
-		[]string{"internal/docx/default-struct/word/theme/theme1.xml", "word/theme/theme1.xml"},
-		[]string{"internal/docx/default-struct/word/fontTable.xml", "word/fontTable.xml"},
-		[]string{"internal/docx/default-struct/word/settings.xml", "word/settings.xml"},
-		[]string{"internal/docx/default-struct/word/styles.xml", "word/styles.xml"},
-		[]string{"internal/docx/default-struct/word/webSettings.xml", "word/webSettings.xml"},
-		[]string{"internal/docx/default-struct/[Content_Types].xml", "[Content_Types].xml"},
+		[]string{"docx/default-struct/_rels/.rels", "_rels/.rels"},
+		[]string{"docx/default-struct/word/theme/theme1.xml", "word/theme/theme1.xml"},
+		[]string{"docx/default-struct/word/fontTable.xml", "word/fontTable.xml"},
+		[]string{"docx/default-struct/word/settings.xml", "word/settings.xml"},
+		[]string{"docx/default-struct/word/styles.xml", "word/styles.xml"},
+		[]string{"docx/default-struct/word/webSettings.xml", "word/webSettings.xml"},
+		[]string{"docx/default-struct/[Content_Types].xml", "[Content_Types].xml"},
 	}
 
 	for _, files := range copyFiles {
