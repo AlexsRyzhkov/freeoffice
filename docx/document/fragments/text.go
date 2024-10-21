@@ -248,7 +248,7 @@ type FTextParagraphSpacing struct {
 }
 
 type FTextParagraphJustify struct {
-	XMLName xml.Name `xml:"w:js"`
+	XMLName xml.Name `xml:"w:jc"`
 	Val     string   `xml:"w:val,attr"`
 }
 

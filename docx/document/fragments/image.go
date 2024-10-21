@@ -37,24 +37,24 @@ const (
 )
 
 type IImageParagraph interface {
-	SetSizeByWidth(uint)
-	SetSizeByHeight(uint)
+	SetSizeByWidth(uint) IImageParagraph
+	SetSizeByHeight(uint) IImageParagraph
 
-	SetWidth(uint)
-	SetHeight(uint)
+	SetWidth(uint) IImageParagraph
+	SetHeight(uint) IImageParagraph
 
-	SetJustify(string)
-	SetLeftOffSet(string)
-	SetRightOffSet(string)
+	SetJustify(string) IImageParagraph
+	SetLeftOffSet(string) IImageParagraph
+	SetRightOffSet(string) IImageParagraph
 }
 
 type FImageParagraph struct {
 	XMLName  xml.Name `xml:"w:p"`
-	FImage   *FImage  `xml:"w:r"`
 	Property *FImageParagraphProperty
+	FImage   *FImage `xml:"w:r"`
 }
 
-func (fip *FImageParagraph) SetSizeByWidth(width uint) {
+func (fip *FImageParagraph) SetSizeByWidth(width uint) IImageParagraph {
 	if width > 0 {
 		oldWidth := fip.FImage.Drawing.Inline.Extent.Cx
 		oldHeight := fip.FImage.Drawing.Inline.Extent.Cy
@@ -68,9 +68,11 @@ func (fip *FImageParagraph) SetSizeByWidth(width uint) {
 		fip.FImage.Drawing.Inline.Extent.Cy = uint(heightByRation) * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CY = uint(heightByRation) * emuPerPixel
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetSizeByHeight(height uint) {
+func (fip *FImageParagraph) SetSizeByHeight(height uint) IImageParagraph {
 	if height > 0 {
 		oldWidth := fip.FImage.Drawing.Inline.Extent.Cx
 		oldHeight := fip.FImage.Drawing.Inline.Extent.Cy
@@ -85,31 +87,39 @@ func (fip *FImageParagraph) SetSizeByHeight(height uint) {
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = uint(widthByRation) * emuPerPixel
 
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetWidth(width uint) {
+func (fip *FImageParagraph) SetWidth(width uint) IImageParagraph {
 	if width > 0 {
 		fip.FImage.Drawing.Inline.Extent.Cx = width * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = width * emuPerPixel
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetHeight(height uint) {
+func (fip *FImageParagraph) SetHeight(height uint) IImageParagraph {
 	if height > 0 {
 		fip.FImage.Drawing.Inline.Extent.Cx = height * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = height * emuPerPixel
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetJustify(justify string) {
+func (fip *FImageParagraph) SetJustify(justify string) IImageParagraph {
 	if justify == "" {
 		fip.Property.Justify = nil
 	} else {
 		fip.Property.Justify = &FImageParagraphJustify{Val: justify}
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetLeftOffSet(leftOffSet string) {
+func (fip *FImageParagraph) SetLeftOffSet(leftOffSet string) IImageParagraph {
 	if leftOffSet == "" && fip.Property.OffSet != nil {
 		fip.Property.OffSet.LeftOffSet = nil
 	}
@@ -121,9 +131,11 @@ func (fip *FImageParagraph) SetLeftOffSet(leftOffSet string) {
 			fip.Property.OffSet = &FImageParagraphOffSet{LeftOffSet: &leftOffSet}
 		}
 	}
+
+	return fip
 }
 
-func (fip *FImageParagraph) SetRightOffSet(rightOffSet string) {
+func (fip *FImageParagraph) SetRightOffSet(rightOffSet string) IImageParagraph {
 	if rightOffSet == "" && fip.Property.OffSet != nil {
 		fip.Property.OffSet.RightOffSet = nil
 	}
@@ -135,6 +147,8 @@ func (fip *FImageParagraph) SetRightOffSet(rightOffSet string) {
 			fip.Property.OffSet = &FImageParagraphOffSet{RightOffSet: &rightOffSet}
 		}
 	}
+
+	return fip
 }
 
 type FImageParagraphProperty struct {
@@ -144,7 +158,7 @@ type FImageParagraphProperty struct {
 }
 
 type FImageParagraphJustify struct {
-	XMLName xml.Name `xml:"w:js"`
+	XMLName xml.Name `xml:"w:jc"`
 	Val     string   `xml:"w:val,attr"`
 }
 
