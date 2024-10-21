@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/AlexsRyzhkov/freeoffice/docx"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/enums"
 )
 
 func main() {
@@ -9,7 +10,7 @@ func main() {
 
 	doc := d.GetDocument()
 
-	doc.AddParagraph("Text", nil)
+	doc.AddParagraph("Text", nil).SetLineSpace(enums.LineSpace200)
 
 	d.Save(".", "test34")
 }

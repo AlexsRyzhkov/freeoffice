@@ -1,4 +1,4 @@
-package fragments
+package enums
 
 const (
 	JustifyLeft   = "left"
@@ -12,13 +12,13 @@ const (
 )
 
 const (
-	Offset000 = "0"
-	Offset025 = "142"
-	Offset050 = "284"
-	Offset075 = "426"
-	Offset100 = "567"
-	Offset125 = "709"
-	Offset150 = "851"
+	Offset000 uint = 0
+	Offset025 uint = 142
+	Offset050 uint = 284
+	Offset075 uint = 426
+	Offset100 uint = 567
+	Offset125 uint = 709
+	Offset150 uint = 851
 )
 
 const (
@@ -39,4 +39,12 @@ const (
 	DefaultMarginRight  = 850
 	DefaultMarginBottom = 1134
 	DefaultMarginLeft   = 1701
+)
+
+const (
+	LineSpace100 uint = 240
+	LineSpace115 uint = 276
+	LineSpace150 uint = 360
+	LineSpace200 uint = 480
+	LineSpace300 uint = 720
 )

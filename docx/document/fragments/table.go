@@ -2,6 +2,7 @@ package fragments
 
 import (
 	"encoding/xml"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/enums"
 )
 
 type ITable interface {
@@ -32,7 +33,7 @@ func (t *FTable) AddRow() {
 		cols[i] = &FTableColumn{
 			TableColumnProperty: TableColumnProperty{
 				TcW: TcW{
-					Width: TableColumnWidthDefault / colNumber,
+					Width: enums.TableColumnWidthDefault / colNumber,
 				},
 				GridSpan: &GridSpan{
 					Val: 1,
@@ -51,14 +52,14 @@ func (t *FTable) AddCol() {
 	t.TableGrid.GridCol = append(t.TableGrid.GridCol, new(FTableGridCol))
 
 	for i := 0; i < len(t.TableGrid.GridCol); i++ {
-		t.TableGrid.GridCol[i].Width = TableColumnWidthDefault / colNumber
+		t.TableGrid.GridCol[i].Width = enums.TableColumnWidthDefault / colNumber
 	}
 
 	for i := 0; i < len(t.TableRows); i++ {
 		t.TableRows[i].TableColumns = append(t.TableRows[i].TableColumns, &FTableColumn{
 			TableColumnProperty: TableColumnProperty{
 				TcW: TcW{
-					Width: TableColumnWidthDefault / colNumber,
+					Width: enums.TableColumnWidthDefault / colNumber,
 				},
 				GridSpan: &GridSpan{
 					Val: 1,
@@ -70,7 +71,7 @@ func (t *FTable) AddCol() {
 			spanVal := t.TableRows[i].TableColumns[j].TableColumnProperty.GridSpan.Val
 			colWidth := &t.TableRows[i].TableColumns[j].TableColumnProperty.TcW
 
-			colWidth.Width = (TableColumnWidthDefault / colNumber) * spanVal
+			colWidth.Width = (enums.TableColumnWidthDefault / colNumber) * spanVal
 		}
 	}
 }
@@ -119,8 +120,8 @@ func (t *FTable) JoinCol(row int, startCol int, endCol int) {
 			newCols = append(newCols, &FTableColumn{
 				TableColumnProperty: TableColumnProperty{
 					TcW: TcW{
-						Width: (TableColumnWidthDefault / colsNumber) * spanVal,
-						Type:  TableColumnType,
+						Width: (enums.TableColumnWidthDefault / colsNumber) * spanVal,
+						Type:  enums.TableColumnType,
 					},
 					GridSpan: &GridSpan{
 						Val: spanVal,
@@ -265,7 +266,7 @@ func CreateFTable(row int, col int) ITable {
 	gridCols := make([]*FTableGridCol, 0, col)
 	for i := 0; i < col; i++ {
 		gridCols = append(gridCols, &FTableGridCol{
-			Width: TableColumnWidthDefault / col,
+			Width: enums.TableColumnWidthDefault / col,
 		})
 	}
 
@@ -277,8 +278,8 @@ func CreateFTable(row int, col int) ITable {
 			rows[i].TableColumns[j] = &FTableColumn{
 				TableColumnProperty: TableColumnProperty{
 					TcW: TcW{
-						Width: TableColumnWidthDefault / col,
-						Type:  TableColumnType,
+						Width: enums.TableColumnWidthDefault / col,
+						Type:  enums.TableColumnType,
 					},
 					GridSpan: &GridSpan{
 						Val: 1,
@@ -292,10 +293,10 @@ func CreateFTable(row int, col int) ITable {
 	return &FTable{
 		Property: FTableProperty{
 			TblStyle: FTableStyle{
-				Val: TableStyleValDefault,
+				Val: enums.TableStyleValDefault,
 			},
 			TblW: FTableW{
-				Type: TableWidthType,
+				Type: enums.TableWidthType,
 			},
 		},
 		TableGrid: FTableGrid{

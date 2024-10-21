@@ -2,10 +2,17 @@ package fragments
 
 import (
 	"encoding/xml"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/enums"
 )
 
 var (
 	emptyString = ""
+)
+
+var (
+	lineRule       = "auto"
+	spaceBefore    = 240
+	spaceAfterZero = 0
 )
 
 type ITextParagraph interface {
@@ -22,14 +29,21 @@ type ITextParagraph interface {
 	UnSetStrike() ITextParagraph
 
 	SetFontFamily(string) ITextParagraph
-	SetFontSize(int) ITextParagraph
+	SetFontSize(uint) ITextParagraph
 
 	SetTextColor(string) ITextParagraph
 	SetTextHighlightColor(string) ITextParagraph
 
 	SetJustify(string) ITextParagraph
-	SetLeftOffSet(string) ITextParagraph
-	SetRightOffSet(string) ITextParagraph
+	SetLeftOffSet(uint) ITextParagraph
+	SetRightOffSet(uint) ITextParagraph
+
+	SetSpaceBefore() ITextParagraph
+	SetSpaceAfter() ITextParagraph
+	SetLineSpace(uint) ITextParagraph
+
+	UnSetSpaceBefore() ITextParagraph
+	UnSetSpaceAfter() ITextParagraph
 }
 
 type FTextParagraph struct {
@@ -85,7 +99,7 @@ func (ftp *FTextParagraph) UnSetStrike() ITextParagraph {
 
 func (ftp *FTextParagraph) SetFontFamily(fontFamily string) ITextParagraph {
 	if fontFamily == "" {
-		ftp.FText.Property.Font = &FFonts{Ascii: TimesNewRoman, HAnsi: TimesNewRoman}
+		ftp.FText.Property.Font = &FFonts{Ascii: enums.TimesNewRoman, HAnsi: enums.TimesNewRoman}
 	} else {
 		ftp.FText.Property.Font = &FFonts{
 			Ascii: fontFamily,
@@ -96,7 +110,7 @@ func (ftp *FTextParagraph) SetFontFamily(fontFamily string) ITextParagraph {
 	return ftp
 }
 
-func (ftp *FTextParagraph) SetFontSize(fontSize int) ITextParagraph {
+func (ftp *FTextParagraph) SetFontSize(fontSize uint) ITextParagraph {
 	if fontSize == 0 {
 		ftp.FText.Property.FTextSize = nil
 		ftp.FText.Property.FTextSizeComplex = nil
@@ -138,42 +152,99 @@ func (ftp *FTextParagraph) SetJustify(justify string) ITextParagraph {
 	return ftp
 }
 
-func (ftp *FTextParagraph) SetLeftOffSet(leftOffSet string) ITextParagraph {
-	if leftOffSet == "" && ftp.Property.OffSet != nil {
-		ftp.Property.OffSet.LeftOffSet = nil
-	}
-
-	if leftOffSet != "" {
-		if ftp.Property.OffSet != nil {
-			ftp.Property.OffSet.LeftOffSet = &leftOffSet
-		} else {
-			ftp.Property.OffSet = &FTextParagraphOffSet{LeftOffSet: &leftOffSet}
-		}
+func (ftp *FTextParagraph) SetLeftOffSet(leftOffSet uint) ITextParagraph {
+	if ftp.Property.OffSet != nil {
+		ftp.Property.OffSet.LeftOffSet = &leftOffSet
+	} else {
+		ftp.Property.OffSet = &FTextParagraphOffSet{LeftOffSet: &leftOffSet}
 	}
 
 	return ftp
 }
 
-func (ftp *FTextParagraph) SetRightOffSet(rightOffSet string) ITextParagraph {
-	if rightOffSet == "" && ftp.Property.OffSet != nil {
-		ftp.Property.OffSet.RightOffSet = nil
+func (ftp *FTextParagraph) SetRightOffSet(rightOffSet uint) ITextParagraph {
+	if ftp.Property.OffSet != nil {
+		ftp.Property.OffSet.RightOffSet = &rightOffSet
+	} else {
+		ftp.Property.OffSet = &FTextParagraphOffSet{RightOffSet: &rightOffSet}
 	}
 
-	if rightOffSet != "" {
-		if ftp.Property.OffSet != nil {
-			ftp.Property.OffSet.RightOffSet = &rightOffSet
-		} else {
-			ftp.Property.OffSet = &FTextParagraphOffSet{RightOffSet: &rightOffSet}
+	return ftp
+}
+
+func (ftp *FTextParagraph) SetSpaceBefore() ITextParagraph {
+	if ftp.Property.Space == nil {
+		ftp.Property.Space = &FTextParagraphSpacing{
+			Before:   &spaceBefore,
+			LineRule: lineRule,
 		}
 	}
+
+	ftp.Property.Space.Before = &spaceBefore
+
+	return ftp
+}
+
+func (ftp *FTextParagraph) SetSpaceAfter() ITextParagraph {
+	if ftp.Property.Space == nil {
+		ftp.Property.Space = &FTextParagraphSpacing{
+			After:    nil,
+			LineRule: lineRule,
+		}
+	}
+
+	ftp.Property.Space.After = nil
+
+	return ftp
+}
+
+func (ftp *FTextParagraph) SetLineSpace(lineSpace uint) ITextParagraph {
+	if ftp.Property.Space == nil {
+		ftp.Property.Space = &FTextParagraphSpacing{
+			Line:     &lineSpace,
+			LineRule: lineRule,
+		}
+	}
+
+	ftp.Property.Space.Line = &lineSpace
+
+	return ftp
+}
+
+func (ftp *FTextParagraph) UnSetSpaceBefore() ITextParagraph {
+	if ftp.Property.Space != nil {
+		ftp.Property.Space.Before = nil
+	}
+
+	return ftp
+}
+
+func (ftp *FTextParagraph) UnSetSpaceAfter() ITextParagraph {
+	if ftp.Property.Space == nil {
+		ftp.Property.Space = &FTextParagraphSpacing{
+			After:    &spaceAfterZero,
+			LineRule: lineRule,
+		}
+	}
+
+	ftp.Property.Space.After = &spaceAfterZero
 
 	return ftp
 }
 
 type FTextParagraphProperty struct {
 	XMLName xml.Name `xml:"w:pPr"`
+	Space   *FTextParagraphSpacing
 	Justify *FTextParagraphJustify
 	OffSet  *FTextParagraphOffSet
+}
+
+type FTextParagraphSpacing struct {
+	XMLName  xml.Name `xml:"w:spacing"`
+	After    *int     `xml:"w:after,attr"`
+	Before   *int     `xml:"w:before,attr"`
+	Line     *uint    `xml:"w:line,attr"`
+	LineRule string   `xml:"w:lineRule,attr"`
 }
 
 type FTextParagraphJustify struct {
@@ -183,8 +254,8 @@ type FTextParagraphJustify struct {
 
 type FTextParagraphOffSet struct {
 	XMLName     xml.Name `xml:"w:ind,omitempty"`
-	LeftOffSet  *string  `xml:"w:firstLine,attr,omitempty"`
-	RightOffSet *string  `xml:"w:right,attr,omitempty"`
+	LeftOffSet  *uint    `xml:"w:firstLine,attr,omitempty"`
+	RightOffSet *uint    `xml:"w:right,attr,omitempty"`
 }
 
 type FText struct {
@@ -218,12 +289,12 @@ type FTextColor struct {
 
 type FTextSize struct {
 	XMLName xml.Name `xml:"w:sz,omitempty"`
-	Val     int      `xml:"w:val,attr"`
+	Val     uint     `xml:"w:val,attr"`
 }
 
 type FTextSizeComplex struct {
 	XMLName xml.Name `xml:"w:szCs,omitempty"`
-	Val     int      `xml:"w:val,attr"`
+	Val     uint     `xml:"w:val,attr"`
 }
 
 type FHighlight struct {
@@ -243,14 +314,14 @@ type TextProperty struct {
 	Strike    bool
 
 	FontFamily string
-	FontSize   int
+	FontSize   uint
 
 	TextColor          string
 	TextHighlightColor string
 
 	Justify     string
-	LeftOffSet  string
-	RightOffSet string
+	LeftOffSet  uint
+	RightOffSet uint
 }
 
 func CreateFTextParagraph(text string, prop *TextProperty) ITextParagraph {
@@ -284,8 +355,8 @@ func CreateFTextParagraph(text string, prop *TextProperty) ITextParagraph {
 		}
 	} else {
 		fTextProperty.Font = &FFonts{
-			Ascii: TimesNewRoman,
-			HAnsi: TimesNewRoman,
+			Ascii: enums.TimesNewRoman,
+			HAnsi: enums.TimesNewRoman,
 		}
 	}
 
@@ -306,11 +377,11 @@ func CreateFTextParagraph(text string, prop *TextProperty) ITextParagraph {
 		fTextParagraphProperty.Justify = &FTextParagraphJustify{Val: prop.Justify}
 	}
 
-	if prop.LeftOffSet != "" {
+	if prop.LeftOffSet > 0 {
 		fTextParagraphProperty.OffSet = &FTextParagraphOffSet{LeftOffSet: &prop.LeftOffSet}
 	}
 
-	if prop.RightOffSet != "" {
+	if prop.RightOffSet > 0 {
 		if fTextParagraphProperty.OffSet != nil {
 			fTextParagraphProperty.OffSet.RightOffSet = &prop.RightOffSet
 		} else {

@@ -2,6 +2,7 @@ package fragments
 
 import (
 	"encoding/xml"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/enums"
 )
 
 const (
@@ -90,8 +91,8 @@ func CreateFBody() *FBody {
 		Paragraphs: nil,
 		SectionProperty: &SectionProperty{
 			PageSize: &PageSize{
-				Width:  DefaultPageWidth,
-				Height: DefaultPageHeight,
+				Width:  enums.DefaultPageWidth,
+				Height: enums.DefaultPageHeight,
 				Orient: orientationPortrait,
 			},
 			PageMargin: &PageMargin{

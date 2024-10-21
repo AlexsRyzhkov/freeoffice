@@ -3,6 +3,7 @@ package files
 import (
 	"encoding/xml"
 	"github.com/AlexsRyzhkov/freeoffice/docx/document/entity"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/enums"
 	"github.com/AlexsRyzhkov/freeoffice/docx/document/fragments"
 	"image"
 	_ "image/jpeg"
@@ -96,7 +97,7 @@ func (d *DocumentFile) AddImage(url string, property *fragments.ImageProperty) f
 	cy := img.Height * entity.EmuPerPixel
 
 	rationHeightToWidth := float64(cy) / float64(cx)
-	maxWidth := (fragments.DefaultPageWidth - fragments.DefaultMarginLeft - fragments.DefaultMarginRight) * entity.TwipsToEmu
+	maxWidth := (enums.DefaultPageWidth - enums.DefaultMarginLeft - enums.DefaultMarginRight) * entity.TwipsToEmu
 
 	if cx > maxWidth {
 		cx = maxWidth
