@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	emuPerPixel = 9525
+	emuPerPixel uint = 9525
 )
 
 const (
@@ -37,11 +37,11 @@ const (
 )
 
 type IImageParagraph interface {
-	SetSizeByWidth(int)
-	SetSizeByHeight(int)
+	SetSizeByWidth(uint)
+	SetSizeByHeight(uint)
 
-	SetWidth(int)
-	SetHeight(int)
+	SetWidth(uint)
+	SetHeight(uint)
 
 	SetJustify(string)
 	SetLeftOffSet(string)
@@ -54,7 +54,7 @@ type FImageParagraph struct {
 	Property *FImageParagraphProperty
 }
 
-func (fip *FImageParagraph) SetSizeByWidth(width int) {
+func (fip *FImageParagraph) SetSizeByWidth(width uint) {
 	if width > 0 {
 		oldWidth := fip.FImage.Drawing.Inline.Extent.Cx
 		oldHeight := fip.FImage.Drawing.Inline.Extent.Cy
@@ -65,12 +65,12 @@ func (fip *FImageParagraph) SetSizeByWidth(width int) {
 		fip.FImage.Drawing.Inline.Extent.Cx = width * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = width * emuPerPixel
 
-		fip.FImage.Drawing.Inline.Extent.Cy = int(heightByRation)
-		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CY = int(heightByRation)
+		fip.FImage.Drawing.Inline.Extent.Cy = uint(heightByRation) * emuPerPixel
+		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CY = uint(heightByRation) * emuPerPixel
 	}
 }
 
-func (fip *FImageParagraph) SetSizeByHeight(height int) {
+func (fip *FImageParagraph) SetSizeByHeight(height uint) {
 	if height > 0 {
 		oldWidth := fip.FImage.Drawing.Inline.Extent.Cx
 		oldHeight := fip.FImage.Drawing.Inline.Extent.Cy
@@ -81,20 +81,20 @@ func (fip *FImageParagraph) SetSizeByHeight(height int) {
 		fip.FImage.Drawing.Inline.Extent.Cy = height * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CY = height * emuPerPixel
 
-		fip.FImage.Drawing.Inline.Extent.Cx = int(widthByRation)
-		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = int(widthByRation)
+		fip.FImage.Drawing.Inline.Extent.Cx = uint(widthByRation) * emuPerPixel
+		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = uint(widthByRation) * emuPerPixel
 
 	}
 }
 
-func (fip *FImageParagraph) SetWidth(width int) {
+func (fip *FImageParagraph) SetWidth(width uint) {
 	if width > 0 {
 		fip.FImage.Drawing.Inline.Extent.Cx = width * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = width * emuPerPixel
 	}
 }
 
-func (fip *FImageParagraph) SetHeight(height int) {
+func (fip *FImageParagraph) SetHeight(height uint) {
 	if height > 0 {
 		fip.FImage.Drawing.Inline.Extent.Cx = height * emuPerPixel
 		fip.FImage.Drawing.Inline.Graphic.GraphicData.Pic.SpPr.Xfrm.Ext.CX = height * emuPerPixel
@@ -174,8 +174,8 @@ type Inline struct {
 
 type Extent struct {
 	XMLName xml.Name `xml:"wp:extent"`
-	Cx      int      `xml:"cx,attr"`
-	Cy      int      `xml:"cy,attr"`
+	Cx      uint     `xml:"cx,attr"`
+	Cy      uint     `xml:"cy,attr"`
 }
 
 type EffectExtent struct {
@@ -280,8 +280,8 @@ type Off struct {
 
 type Ext struct {
 	XMLName xml.Name `xml:"a:ext"`
-	CX      int      `xml:"cx,attr"`
-	CY      int      `xml:"cy,attr"`
+	CX      uint     `xml:"cx,attr"`
+	CY      uint     `xml:"cy,attr"`
 }
 
 type PrstGeom struct {
@@ -291,7 +291,7 @@ type PrstGeom struct {
 }
 
 type ImageProperty struct {
-	Width int
+	Width uint
 
 	Justify     string
 	LeftOffSet  string
@@ -336,7 +336,7 @@ func createFImage(image *entity.Image) *FImage {
 		Inline: Inline{
 			Extent: Extent{
 				Cx: image.Cx,
-				Cy: int(float64(image.Cx) * image.RationWidthToHeight),
+				Cy: uint(float64(image.Cx) * image.RationWidthToHeight),
 			},
 			EffectExtent: EffectExtent{
 				L: effectExtentDefaultL,
@@ -388,7 +388,7 @@ func createFImage(image *entity.Image) *FImage {
 								},
 								Ext: Ext{
 									CX: image.Cx,
-									CY: int(float64(image.Cx) * image.RationWidthToHeight),
+									CY: uint(float64(image.Cx) * image.RationWidthToHeight),
 								},
 							},
 							PrstGeom: PrstGeom{

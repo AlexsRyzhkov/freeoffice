@@ -105,7 +105,7 @@ func (d *DocumentFile) AddImage(url string, property *fragments.ImageProperty) f
 
 	imageEntity := &entity.Image{
 		NvPrID:              entity.GenNvPrID(),
-		Cx:                  cx,
+		Cx:                  uint(cx),
 		RationWidthToHeight: rationHeightToWidth,
 		Embed:               GetRelationID(),
 		Name:                entity.GenImageName(filepath.Ext(url)),

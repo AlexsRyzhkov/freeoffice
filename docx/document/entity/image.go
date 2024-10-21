@@ -10,7 +10,7 @@ const (
 )
 
 type Image struct {
-	Cx                  int
+	Cx                  uint
 	RationWidthToHeight float64
 	NvPrID              string
 	Embed               string
