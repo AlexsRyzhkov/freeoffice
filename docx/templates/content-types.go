@@ -3,6 +3,7 @@ package templates
 const ContentType = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
     <Default Extension="png" ContentType="image/png" />
+	<Default Extension="jpg" ContentType="image/jpg" />
     <Default Extension="jpeg" ContentType="image/jpeg" />
     <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml" />
     <Default Extension="xml" ContentType="application/xml" />
