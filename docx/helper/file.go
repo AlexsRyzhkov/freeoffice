@@ -2,61 +2,39 @@ package helper
 
 import (
 	"archive/zip"
-	"bytes"
 	"encoding/xml"
 	files2 "github.com/AlexsRyzhkov/freeoffice/docx/document/files"
 	"io"
 	"os"
 )
 
-func WriteFileToZip(zipDocxWriter *zip.Writer, from string, to string) {
+func WriteFileToZip(zipDocxWriter *zip.Writer, content string, to string) {
 	zipFile, _ := zipDocxWriter.Create(to)
-
-	relsFile, err := os.Open(from)
-	if err != nil {
-		panic(err)
-	}
-	defer relsFile.Close()
-
-	io.Copy(zipFile, relsFile)
+	zipFile.Write([]byte(content))
 }
 
 func WriteDocumentToZip(zipDocxWriter *zip.Writer, doc *files2.DocumentFile) {
 	zipWordDocumentFile, _ := zipDocxWriter.Create("word/document.xml")
-
-	var buf bytes.Buffer
 
 	docData, err := xml.MarshalIndent(doc, "", "  ")
 	if err != nil {
 		panic(err)
 	}
 
-	buf.WriteString(doc.XMLSchema)
-	buf.Write(docData)
-
-	_, err = buf.WriteTo(zipWordDocumentFile)
-	if err != nil {
-		return
-	}
+	zipWordDocumentFile.Write([]byte(doc.XMLSchema))
+	zipWordDocumentFile.Write(docData)
 }
 
 func WriteRelationWordToZip(zipDocxWriter *zip.Writer, rel *files2.RelationshipFile) {
 	zipWordDocumentFile, _ := zipDocxWriter.Create("word/_rels/document.xml.rels")
-
-	var buf bytes.Buffer
 
 	docData, err := xml.MarshalIndent(rel.Relationships, "", "  ")
 	if err != nil {
 		panic(err)
 	}
 
-	buf.WriteString(files2.XMLSchema)
-	buf.Write(docData)
-
-	_, err = buf.WriteTo(zipWordDocumentFile)
-	if err != nil {
-		return
-	}
+	zipWordDocumentFile.Write([]byte(files2.XMLSchema))
+	zipWordDocumentFile.Write(docData)
 }
 
 func WriteImageRelationToZip(zipDocxWriter *zip.Writer, d *files2.DocumentFile, rel *files2.RelationshipFile) {

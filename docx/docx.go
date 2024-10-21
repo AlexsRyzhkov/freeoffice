@@ -5,6 +5,10 @@ import (
 	"bytes"
 	files2 "github.com/AlexsRyzhkov/freeoffice/docx/document/files"
 	"github.com/AlexsRyzhkov/freeoffice/docx/helper"
+	"github.com/AlexsRyzhkov/freeoffice/docx/templates"
+	templrels "github.com/AlexsRyzhkov/freeoffice/docx/templates/_rels"
+	templword "github.com/AlexsRyzhkov/freeoffice/docx/templates/word"
+	tempwordthem "github.com/AlexsRyzhkov/freeoffice/docx/templates/word/theme"
 	"io"
 	"os"
 	"path/filepath"
@@ -56,18 +60,18 @@ func (d *Docx) addToZip(zipDocx io.Writer) {
 	zipDocxWriter := zip.NewWriter(zipDocx)
 	defer zipDocxWriter.Close()
 
-	copyFiles := [][]string{
-		[]string{"docx/default-struct/_rels/.rels", "_rels/.rels"},
-		[]string{"docx/default-struct/word/theme/theme1.xml", "word/theme/theme1.xml"},
-		[]string{"docx/default-struct/word/fontTable.xml", "word/fontTable.xml"},
-		[]string{"docx/default-struct/word/settings.xml", "word/settings.xml"},
-		[]string{"docx/default-struct/word/styles.xml", "word/styles.xml"},
-		[]string{"docx/default-struct/word/webSettings.xml", "word/webSettings.xml"},
-		[]string{"docx/default-struct/[Content_Types].xml", "[Content_Types].xml"},
+	copyContentToFile := [][]string{
+		{templrels.Rels, "_rels/.rels"},
+		{tempwordthem.Theme1, "word/theme/theme1.xml"},
+		{templword.FontTable, "word/fontTable.xml"},
+		{templword.Settings, "word/settings.xml"},
+		{templword.Styles, "word/styles.xml"},
+		{templword.WebSettings, "word/webSettings.xml"},
+		{templates.ContentType, "[Content_Types].xml"},
 	}
 
-	for _, files := range copyFiles {
-		helper.WriteFileToZip(zipDocxWriter, files[0], files[1])
+	for _, contentFile := range copyContentToFile {
+		helper.WriteFileToZip(zipDocxWriter, contentFile[0], contentFile[1])
 	}
 
 	helper.WriteImageRelationToZip(zipDocxWriter, d.document, d.relations)
