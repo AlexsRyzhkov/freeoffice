@@ -361,8 +361,8 @@ func CreateFTextParagraph(text string, prop *TextProperty) ITextParagraph {
 	}
 
 	if prop.FontSize != 0 {
-		fTextProperty.FTextSize = &FTextSize{Val: prop.FontSize}
-		fTextProperty.FTextSizeComplex = &FTextSizeComplex{Val: prop.FontSize}
+		fTextProperty.FTextSize = &FTextSize{Val: prop.FontSize * 2}
+		fTextProperty.FTextSizeComplex = &FTextSizeComplex{Val: prop.FontSize * 2}
 	}
 
 	if prop.TextColor != "" {
