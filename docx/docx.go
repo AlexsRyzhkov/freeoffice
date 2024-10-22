@@ -3,7 +3,7 @@ package docx
 import (
 	"archive/zip"
 	"bytes"
-	files2 "github.com/AlexsRyzhkov/freeoffice/docx/document/files"
+	"github.com/AlexsRyzhkov/freeoffice/docx/document/files"
 	"github.com/AlexsRyzhkov/freeoffice/docx/helper"
 	"github.com/AlexsRyzhkov/freeoffice/docx/templates"
 	templrels "github.com/AlexsRyzhkov/freeoffice/docx/templates/_rels"
@@ -14,49 +14,58 @@ import (
 	"path/filepath"
 )
 
-type Docx struct {
-	relations *files2.RelationshipFile
-	document  *files2.DocumentFile
+type IDocx interface {
+	GetDocument() files.IDocumentFile
+	Save(string, string) error
+	GetBytes() (*bytes.Buffer, error)
 }
 
-func New() *Docx {
+type Docx struct {
+	relations *files.RelationshipFile
+	document  *files.DocumentFile
+}
+
+func New() IDocx {
 	return &Docx{
-		relations: files2.CreateRelationshipsFile(),
-		document:  files2.CreateDocumentFile(),
+		relations: files.CreateRelationshipsFile(),
+		document:  files.CreateDocumentFile(),
 	}
 }
 
-func (d *Docx) GetDocument() files2.IDocumentFile {
+func (d *Docx) GetDocument() files.IDocumentFile {
 	return d.document
 }
 
-func (d *Docx) GetRelations() files2.IRelationFile {
+func (d *Docx) GetRelations() files.IRelationFile {
 	return d.relations
 }
 
-func (d *Docx) GetBytes() bytes.Buffer {
+func (d *Docx) GetBytes() (*bytes.Buffer, error) {
 	var buffer bytes.Buffer
 
-	d.addToZip(&buffer)
+	err := d.addToZip(&buffer)
+	if err != nil {
+		return nil, err
+	}
 
-	return buffer
+	return &buffer, nil
 }
 
-func (d *Docx) Save(folder string, name string) {
+func (d *Docx) Save(folder string, name string) error {
 	if name == "" {
 		name = "gen"
 	}
 
 	zipDocx, err := os.Create(filepath.Join(folder, name+".docx"))
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	defer zipDocx.Close()
-	d.addToZip(zipDocx)
+	return d.addToZip(zipDocx)
 }
 
-func (d *Docx) addToZip(zipDocx io.Writer) {
+func (d *Docx) addToZip(zipDocx io.Writer) error {
 	zipDocxWriter := zip.NewWriter(zipDocx)
 	defer zipDocxWriter.Close()
 
@@ -71,10 +80,26 @@ func (d *Docx) addToZip(zipDocx io.Writer) {
 	}
 
 	for _, contentFile := range copyContentToFile {
-		helper.WriteFileToZip(zipDocxWriter, contentFile[0], contentFile[1])
+		err := helper.WriteFileToZip(zipDocxWriter, contentFile[0], contentFile[1])
+		if err != nil {
+			return err
+		}
 	}
 
-	helper.WriteImageRelationToZip(zipDocxWriter, d.document, d.relations)
-	helper.WriteDocumentToZip(zipDocxWriter, d.document)
-	helper.WriteRelationWordToZip(zipDocxWriter, d.relations)
+	err := helper.WriteImageRelationToZip(zipDocxWriter, d.document, d.relations)
+	if err != nil {
+		return err
+	}
+
+	err = helper.WriteDocumentToZip(zipDocxWriter, d.document)
+	if err != nil {
+		return err
+	}
+
+	err = helper.WriteRelationWordToZip(zipDocxWriter, d.relations)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

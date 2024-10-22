@@ -64,27 +64,27 @@ func CreateRelationshipsFile() *RelationshipFile {
 		Relationships: Relationships{
 			Xmlns: relationshipXmlns,
 			Relationships: []*Relationship{
-				&Relationship{
+				{
 					ID:     "rId1",
 					Type:   relationShipWebSettings,
 					Target: targetWebSetting,
 				},
-				&Relationship{
+				{
 					ID:     "rId2",
 					Type:   relationShipSettings,
 					Target: targetSettings,
 				},
-				&Relationship{
+				{
 					ID:     "rId3",
 					Type:   relationShipStyles,
 					Target: targetStyles,
 				},
-				&Relationship{
+				{
 					ID:     "rId4",
 					Type:   relationShipThem1,
 					Target: targetTheme1,
 				},
-				&Relationship{
+				{
 					ID:     "rId5",
 					Type:   relationShipFontTable,
 					Target: targetFontTable,

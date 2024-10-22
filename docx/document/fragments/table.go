@@ -209,6 +209,8 @@ type FTableRow struct {
 }
 
 func (tr *FTableRow) GetCol(col int) ITableCol {
+	col--
+
 	if col < 0 || col > len(tr.TableColumns) {
 		return nil
 	}
